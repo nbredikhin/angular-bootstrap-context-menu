@@ -1,11 +1,10 @@
-var browserify = require('browserify');
-var buffer = require('vinyl-buffer');
-var connect = require('gulp-connect');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
+var connect = require('gulp-connect');
 var less = require('gulp-less');
-var source = require('vinyl-source-stream');
 var sourcemaps = require('gulp-sourcemaps');
+var concat = require('gulp-concat');
+var mainBowerFiles = require('main-bower-files');
 
 var config = {
     paths: {
@@ -25,21 +24,11 @@ gulp.task('connect', function () {
 });
 
 gulp.task('build-scripts', function () {
-    var bundler = browserify({
-        debug: true,
-        entries: config.paths.entryPoint
-    });
-
-    return bundler
-        .bundle()
-        .pipe(source('bundle.js'))
-        .pipe(buffer())
-        .pipe(sourcemaps.init({loadMaps: true}))
-        .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest(config.paths.build))
-        .on('error', function (e) {
-            gutil.log(e);
-        });
+    return gulp.src(mainBowerFiles().concat([config.paths.js]))
+        .pipe(sourcemaps.init())
+        .pipe(concat('app.js'))
+        .pipe(sourcemaps.write("./"))
+        .pipe(gulp.dest(config.paths.build));
 });
 
 gulp.task('build-less', function () {
