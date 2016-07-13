@@ -1,0 +1,26 @@
+<doctype html!>
+<html>
+    <head>
+        <title>Players list</title>
+        <link rel="stylesheet" href="bootstrap/bootstrap.min.css">
+    </head>
+    <body ng-app="app">
+        <div class="container">
+            <h1>Players list test</h1>
+            <div ng-controller="ListController">
+                <div class="list-group">
+                    <a class="list-group-item" ng-repeat="player in playersList" context-menu>
+                        <h4 ng-bind="player.name"></h4>
+                        <p>Score: {{player.score}}</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <script src="angular/angular.js"></script>        
+        <script src="app/app.js"></script>
+        <!--Controllers-->
+        <script src="app/controllers/ListController.js"></script>
+        <!--Directives-->
+        <script src="app/directives/contextMenu.js"></script>
+    </body>
+</html>
