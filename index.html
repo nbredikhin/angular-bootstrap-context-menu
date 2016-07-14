@@ -5,18 +5,23 @@
         <link rel="stylesheet" href="css/bootstrap.min.css">
     </head>
     <body ng-app="app">
-        <div class="container">
-            <h1>Players list test</h1>
-            <div ng-controller="ListController">
+        <div class="container">            
+            <div ng-controller="ListController" context-menu="mainMenu">
+                <h1>Players list test</h1>
                 <div class="list-group">
                     <a class="list-group-item" ng-repeat="player in playersList" context-menu="listItemMenu">
                         <div class="row">
                             <div class="col-md-6">
-                                <h4 ng-bind="player.name"></h4>
-                                <p>Score: {{player.score}}</p>
+                                <h4>
+                                   {{player.name}}
+                                   <span class="label" ng-class="player.score <= 200 ? 'label-danger' : 'label-success'">{{player.score <= 200 ? 'BAD' : 'GOOD'}}</span> 
+                                </h4>
+                                <p>Score: {{player.score}} </p>
                             </div>
                             <div class="col-md-6">
-                                <button context-menu="{items: [{text: 'Test action'}]}" class="btn btn-link btn pull-right" ng-class="player.name == 'Player_1' ? 'disabled':''" ng-click="removePlayer($index)"><span class="glyphicon glyphicon-trash"></span></button>
+                                <button context-menu="{items: [{text: 'Test action'}]}" class="btn btn-link btn pull-right" ng-class="player.name == 'Player_1' ? 'disabled':''" ng-click="removePlayer($index)">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </button>
                             </div>
                         </div>
                     </a>

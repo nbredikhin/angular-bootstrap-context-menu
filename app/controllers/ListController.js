@@ -19,6 +19,15 @@ angular.module('app')
             $scope.playersList.splice(index, 1);
         }
 
+        $scope.addPlayer = function () {
+            var id = $scope.playersList.length + 1;
+            var score = Math.floor(Math.random() * 600);
+            $scope.playersList.push({
+                name: 'Player_' + id, 
+                score: score
+            });
+        }
+
         $scope.listItemMenu = {
             someProperty: true,
 
@@ -29,5 +38,18 @@ angular.module('app')
                     $scope.removePlayer(element.scope().$index);
                 }}
             ]
-        }
+        }        
+
+        $scope.mainMenu = {
+            items: [
+                {text: 'Add player', click: function (element) {
+                    $scope.addPlayer();
+                }},
+                {text: 'Remove all players', click: function (element) {
+                    $scope.playersList = [
+                        {name: 'Player_1', score: 201},
+                    ];
+                }}
+            ]         
+        };
     });

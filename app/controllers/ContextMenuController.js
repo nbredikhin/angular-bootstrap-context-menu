@@ -1,5 +1,5 @@
 angular.module('app')
-    .controller('ContextMenuController', function ($scope, $element, $rootScope, $document) {
+    .controller('ContextMenuController', function ($scope, $element, $rootScope, $document, $timeout) {
         // элемент, по которому было открыто меню
         var currentMenuElement;
         
@@ -35,16 +35,27 @@ angular.module('app')
 
             // Отображение меню в точке клика
             $scope.isVisible = true;
-            $element.css({
-                top: y + 'px',
-                left: x + 'px'
-            });
+            // Скрыть меню, пока оно отрисовывается, чтобы избежать мигания
+            angular.element($element).addClass("hidden");
+            // offsetWidth равно нулю сразу после появления меню, поэтому нужно дождаться отрисовки
+            $timeout(function () {
+                angular.element($element).removeClass("hidden");
+
+           	    var width = angular.element($element).prop("offsetWidth");
+           	    var height = angular.element($element).prop("offsetHeight");
+                var menuX = Math.min(x, window.innerWidth - width - 20);
+                //var menuY = Math.min(y, window.innerHeight - height - 20);
+                $element.css({
+                    top: y + 'px',
+                    left: menuX + 'px'
+                });                   
+            })
         });
 
         // Скрыть меню по клику в любом месте
         $document.on('mousedown', function (event) {
             $scope.$apply(function() {
-                if (!angular.element(event.target).scope().isContextMenuScope) {
+                if (!event.target || !angular.element(event.target).scope().isContextMenuScope) {
                     $scope.hide();
                 }
             });
