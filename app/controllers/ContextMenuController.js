@@ -1,14 +1,11 @@
 angular.module('app')
     .controller('ContextMenuController', function ($scope, $element, $rootScope, $document) {
-        // Scope элемента, по которому было открыто меню
-        var menuElementScope;
+        // элемент, по которому было открыто меню
+        var currentMenuElement;
         
         $scope.isVisible = false;
-        $scope.items = [
-            // {text: 'item 1'},
-            // {text: 'item 2'},
-            // {text: 'item 3'}
-        ];
+        $scope.isContextMenuScope = true;
+        $scope.items = [];
 
         // Абсолютное позиционирование для меню
         $element.css({
@@ -21,20 +18,17 @@ angular.module('app')
             if (typeof(properties) != 'object' || typeof(properties.items) != 'object') {
                 return;
             }
-            menuElementScope = scope;
+            currentMenuElement = element;
             $scope.items = [];
             properties.items.forEach(function(item) {
                 // CSS-класс, показывающий, включена ли кнопка
-                var enabledClass = '';
+                var enabled = true;
                 if (typeof(item.enabled) === 'string') {
-                    var enabled = scope.$eval(item.enabled);
-                    if (!enabled) {
-                        enabledClass = 'disabled';
-                    }
+                    enabled = scope.$eval(item.enabled);
                 }
                 $scope.items.push({
                     text: item.text,
-                    enabledClass: enabledClass,
+                    enabled: enabled,
                     click: item.click,
                 });
             });
@@ -50,7 +44,35 @@ angular.module('app')
         // Скрыть меню по клику в любом месте
         $document.on('mousedown', function (event) {
             $scope.$apply(function() {
-                $scope.isVisible = false;
+                if (!angular.element(event.target).scope().isContextMenuScope) {
+                    $scope.hide();
+                }
             });
         });
+
+        $scope.itemClick = function (index) {
+            var item = $scope.items[index];
+            if (!item.enabled) {
+                return;
+            }            
+            var click = item.click;
+            switch (typeof(click)) {
+                case 'function':
+                    click(currentMenuElement);
+                    break;
+                case 'string':
+                    currentMenuElement.scope().$eval(click);
+                default:
+                    break;
+            }
+            // Скрыть меню после выбора пункта
+            $scope.hide();      
+        };
+
+        // Скрыть активное контекстное меню
+        $scope.hide = function () {
+            $scope.isVisible = false;
+            $scope.items = [];
+            currentMenuElement = null;
+        }
     });

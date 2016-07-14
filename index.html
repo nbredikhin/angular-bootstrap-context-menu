@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>Players list</title>
-        <link rel="stylesheet" href="bootstrap/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap.min.css">
     </head>
     <body ng-app="app">
         <div class="container">
@@ -10,8 +10,15 @@
             <div ng-controller="ListController">
                 <div class="list-group">
                     <a class="list-group-item" ng-repeat="player in playersList" context-menu="listItemMenu">
-                        <h4 ng-bind="player.name"></h4>
-                        <p>Score: {{player.score}}</p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4 ng-bind="player.name"></h4>
+                                <p>Score: {{player.score}}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <button context-menu="{items: [{text: 'Test action'}]}" class="btn btn-link btn pull-right" ng-class="player.name == 'Player_1' ? 'disabled':''" ng-click="removePlayer($index)"><span class="glyphicon glyphicon-trash"></span></button>
+                            </div>
+                        </div>
                     </a>
                 </div>
             </div>

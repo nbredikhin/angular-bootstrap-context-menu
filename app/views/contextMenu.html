@@ -1,3 +1,11 @@
-<div class="btn-group-vertical" role="group" ng-controller="ContextMenuController" ng-show="isVisible">
-    <button type="button" class="btn btn-default" ng-class="item.enabledClass" ng-repeat="item in items" ng-bind="item.text"></button>
+<div class="context-menu btn-group-vertical" role="group" ng-controller="ContextMenuController" ng-show="isVisible">
+    <button 
+        type="button" 
+        class="context-menu btn btn-default"
+        ng-class="item.enabled ? '' : 'disabled'" 
+        ng-repeat="item in items" 
+        ng-bind="item.text"
+        ng-click="itemClick($index)"
+    >
+    </button>
 </div>
