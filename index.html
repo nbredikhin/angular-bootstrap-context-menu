@@ -9,7 +9,7 @@
             <h1>Players list test</h1>
             <div ng-controller="ListController">
                 <div class="list-group">
-                    <a class="list-group-item" ng-repeat="player in playersList" context-menu>
+                    <a class="list-group-item" ng-repeat="player in playersList" context-menu="listItemMenu">
                         <h4 ng-bind="player.name"></h4>
                         <p>Score: {{player.score}}</p>
                     </a>
