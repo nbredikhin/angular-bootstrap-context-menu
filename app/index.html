@@ -9,10 +9,19 @@
     <link rel="stylesheet" href="app.css">
 </head>
 <body ng-app="app">
-    <div class="container" ng-controller="TestController">
-        <h1>Title</h1>
-        <p ng-bind="text"></p>
-        <button class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Button</button>
+    <div class="container">
+        <h1 class="text-center">Example users list</h1>
+        <div ng-controller="ListController">
+            <ul>
+                <ng-repeat ng-repeat="item in listItems">
+                    <ng-include src="'views/listItem.html'"></ng-include>
+                </ng-repeat>
+            </ul>
+        </div>
+        <footer>
+            <hr>
+            <p class="text-center">Nikita Bredikhin &copy; 2016. Random avatars are provided by <a href="http://avatars.adorable.io/">avatars.adorable.io</a></p>
+        </footer>
     </div>
 
     <script type="text/javascript" src="lib/angular/angular.js"></script>

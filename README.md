@@ -15,6 +15,6 @@ To start test aplication you can simply run
 ```bash
 gulp watch
 ```
-It will build the project and start the development server. If you want so specify another port, you can use `gulp watch --port 7777`
+It will build the project and start the development server. To specify another port, you can use `gulp watch --port 7777`
 
 __Enjoy!__
