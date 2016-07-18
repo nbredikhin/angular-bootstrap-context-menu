@@ -1,4 +1,5 @@
 const gulp = require('gulp');
+const util = require('gulp-util');
 const less = require('gulp-less');
 const concat = require('gulp-concat');
 const connect = require('gulp-connect');
@@ -13,9 +14,14 @@ const paths = {
 };
 
 gulp.task('connect', function () {
+    // Validate --port argument
+    var port = parseInt(util.env.port);
+    if (isNaN(port) || port <= 0 || port >= 65536) {
+        port = 8000;
+    }
     connect.server({
         root: paths.dist,
-        port: 8000
+        port: port
     });
 });
 
