@@ -1,0 +1,29 @@
+{
+  "name": "angular-context-menu",
+  "description": "A simple context menu module for AngularJS",
+  "main": "app/app.js",
+  "authors": [
+    "dcr30"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/dcr30/angular-context-menu",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.7",
+    "bootstrap": "^3.3.6"
+  },
+  "overrides": {
+    "bootstrap": {
+      "main": [
+        "dist/css/bootstrap.min.css*", "dist/fonts/*", "dist/js/*"
+      ]
+    }
+  }  
+}

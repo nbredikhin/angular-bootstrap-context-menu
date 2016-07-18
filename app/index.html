@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>Title</title>
+    <!--Bootstrap-->
+    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="app.css">
+</head>
+<body ng-app="app">
+    <div class="container" ng-controller="TestController">
+        <h1>Title</h1>
+        <p ng-bind="text"></p>
+        <button class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Button</button>
+    </div>
+
+    <script type="text/javascript" src="lib/angular/angular.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "name": "angular-context-menu",
+  "version": "0.0.2",
+  "description": "A simple context menu module for AngularJS",
+  "main": "app/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dcr30/angular-context-menu.git"
+  },
+  "author": "dcr30",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dcr30/angular-context-menu/issues"
+  },
+  "homepage": "https://github.com/dcr30/angular-context-menu#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-connect": "^4.2.0",
+    "gulp-less": "^3.1.0",
+    "gulp-sourcemaps": "^1.6.0",
+    "main-bower-files": "^2.13.1"
+  }
+}
