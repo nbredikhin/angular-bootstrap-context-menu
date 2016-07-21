@@ -4,8 +4,7 @@
   "description": "A simple context menu module for AngularJS",
   "main": "app/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "gulp watch",
+    "start": "node backend/main.js",
     "postinstall": "node_modules/.bin/bower install"
   },
   "repository": {

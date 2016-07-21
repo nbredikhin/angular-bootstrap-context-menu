@@ -1,0 +1,13 @@
+<div class="context-menu btn-group-vertical" role="group" ng-controller="ContextMenuController" ng-show="isVisible">
+    <button 
+        type="button" 
+        class="context-menu btn btn-default"
+        ng-class="item.enabled ? '' : 'disabled'" 
+        ng-repeat="item in items" 
+        ng-click="itemClick($index)"
+        ng-mouseover="itemMouseOver($index)"
+    >
+        <span ng-bind="item.text"></span>
+        <span ng-show="item.submenu" context-menu="{items:[{text:'test'}]}" class="glyphicon glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    </button>
+</div>

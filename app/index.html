@@ -11,10 +11,10 @@
 <body ng-app="app">
     <div class="container">
         <h1 class="text-center">Example users list</h1>
-        <div ng-controller="ListController">
+        <div ng-controller="UsersListController">
             <ul>
-                <ng-repeat ng-repeat="item in listItems">
-                    <ng-include src="'views/listItem.html'"></ng-include>
+                <ng-repeat ng-repeat="user in users">
+                    <ng-include src="'views/usersListItem.html'"></ng-include>
                 </ng-repeat>
             </ul>
         </div>
@@ -23,6 +23,8 @@
             <p class="text-center">Nikita Bredikhin &copy; 2016. Random avatars are provided by <a href="http://avatars.adorable.io/">avatars.adorable.io</a></p>
         </footer>
     </div>
+
+    <ng-include src="'modules/contextMenu/contextMenu.html'"></ng-include>
 
     <script type="text/javascript" src="lib/angular/angular.js"></script>
     <script type="text/javascript" src="app.js"></script>

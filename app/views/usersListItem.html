@@ -1,11 +1,16 @@
-<div class="well">
+<div class="well" context-menu="user.group == 'admin' ? adminContextMenu : userContextMenu">
     <div class="media">
         <div class="media-left">
-            <img class="media-object img-circle" src="https://api.adorable.io/avatars/100/dunno{{item}}">
+            <img class="media-object img-circle" src="https://api.adorable.io/avatars/100/{{user.name}}">
         </div>
         <div class="media-body">
-            <h3 class="media-heading">User {{item}}</h3>
-            <p>Some information goes here...</p>
+            <h3 class="media-heading">
+                {{user.name}} <span ng-show="user.online" class="label label-info">Online</span>
+            </h3>
+            <p>Group: 
+                <span ng-show="user.group == 'admin'" class="label label-success">Admin</span>
+                <span ng-show="user.group == 'user'" class="label label-primary">User</span>                
+            </p>
         </div>
         <div class="media-right">
             <div class="btn-group-vertical">
