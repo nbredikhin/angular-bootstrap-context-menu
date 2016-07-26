@@ -10,7 +10,11 @@ app.controller('UsersListController', function ($scope, users) {
         {text: 'Moar', submenu: [
             {text: 'Action 1'},
             {text: 'Action 2'},
-            {text: 'Action 3'}
+            {text: 'Moar moar', submenu: [
+                {text: 'Subsubmenu action 1'},
+                {text: 'Subsubmenu action 2'},
+                {text: 'Subsubmenu action 3'}
+            ]}
         ]}
     ];
 
