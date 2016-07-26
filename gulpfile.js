@@ -1,6 +1,7 @@
 const gulp = require('gulp');
 const util = require('gulp-util');
 const less = require('gulp-less');
+const babel = require('gulp-babel');
 const concat = require('gulp-concat');
 const connect = require('gulp-connect');
 const sourcemaps = require('gulp-sourcemaps');
@@ -42,8 +43,11 @@ gulp.task('less', function () {
 gulp.task('js', function () {
     return gulp.src(paths.js)
         .pipe(sourcemaps.init())
+        .pipe(babel({
+            presets: ['es2015']  
+        }))
         .pipe(concat('app.js'))
-        .pipe(sourcemaps.write('./'))
+        .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(paths.dist));
 });
 

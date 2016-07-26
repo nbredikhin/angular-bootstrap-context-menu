@@ -13,6 +13,7 @@ Bower components will be automatically installed too.
 
 To start test aplication you can simply run
 ```bash
+npm start
 gulp watch
 ```
 It will build the project and start the development server. To specify another port, you can use `gulp watch --port 7777`
