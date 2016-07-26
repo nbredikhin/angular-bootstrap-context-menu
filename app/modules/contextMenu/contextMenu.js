@@ -3,12 +3,26 @@
 angular.module('contextMenu', [])
     .controller('ContextMenuController', function ($scope, $document, $element) {
         // Элемент меню
-        let menuElement;
+        let isVisible = false;
+        let menuElements = [];
+
+        let handleItemClick = (item) => {    
+            switch (typeof(item.click)) {
+                case 'function':
+                    click();
+                    break;
+                case 'string':
+                    console.log($scope.$eval(item.click));
+                    break;
+            }
+
+            this.hideMenu();
+        };
 
         // Добавить меню/подменю
         this.addMenu = (x, y, items) => {
             let div = angular.element('<div>');
-            div.addClass('btn-group-vertical');
+            div.addClass('btn-group-vertical context-menu');
             div.attr({role: 'group'});
             div.css({
                 position: 'absolute',
@@ -16,42 +30,61 @@ angular.module('contextMenu', [])
                 top: y + 'px'
             });
 
+            // Добавить кнопки
             angular.forEach(items, (item) => {
                 let button = angular.element('<button>');
-                button.addClass('btn');
-                button.addClass('btn-default');
-                button.text(item);
+                button.addClass('btn btn-default text-left context-menu-item');
+                button.text(item.text);
                 div.append(button);
+
+                // Включена ли кнопка
+                let isEnabled = true;
+                if (typeof(item.enabled) === 'string') {
+                    isEnabled = $scope.$eval(item.enabled);
+                    if (!isEnabled) {
+                        button.addClass('disabled');
+                    }
+                }
+
+                // Обработка нажатия
+                if (isEnabled) {                    
+                    button.on('click', (event) => handleItemClick(item));
+                }
             });
 
-            angular.element($document).find('body').append(div);
-
-            menuElement = div;
+            // Добавить меню
+            angular.element($element).append(div);
+            menuElements.push(div);
         };
 
         // Отобразить контекстное меню
-        this.showMenu = (x, y, scope, attrs, element) => {
-            this.addMenu(x, y, [
-                'action 1',
-                'action 2',
-                "action 3"
-            ]);
+        this.showMenu = (x, y, items) => {
+            this.addMenu(x, y, items);
+            isVisible = true;
         };
         
         // Удалить контекстное меню
-        this.removeMenu = () => {
-            if (!menuElement) {
+        this.hideMenu = () => {
+            if (!isVisible) {
                 return;
             }            
-            menuElement.remove();
-            menuElement = undefined;
+            isVisible = false;
+            angular.forEach(menuElements, (element) => {
+                element.remove();
+            });
+            menuElements = [];
         };
 
-        $document.on('mousedown', () => {
-            if (!menuElement) {
+        $document.on('mousedown', (event) => {
+            if (!isVisible) {
                 return;
             }
-            this.removeMenu();
+            if (angular.element(event.target).hasClass('context-menu') || 
+                angular.element(event.target).hasClass('context-menu-item')) 
+            {
+                return;
+            }
+            this.hideMenu();
         });
     })
 
@@ -65,9 +98,10 @@ angular.module('contextMenu', [])
                         event.stopPropagation();
 
                         if ($rootScope.activeContextMenuController) {
-                            $rootScope.activeContextMenuController.removeMenu();
+                            $rootScope.activeContextMenuController.hideMenu();
                         }
-                        controller.showMenu(event.pageX, event.pageY, scope, attrs, element);
+                        let items = scope.$eval(attrs.contextMenu);
+                        controller.showMenu(event.pageX, event.pageY, items);
                         $rootScope.activeContextMenuController = controller;
                     });
                 });

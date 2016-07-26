@@ -41,11 +41,17 @@ gulp.task('less', function () {
 });
 
 gulp.task('js', function () {
+    var babelPipe = babel({
+        presets: ['es2015']  
+    });
+    babelPipe.on('error', (e) => {
+        util.log(util.colors.red(e.name), e.message);
+        babelPipe.end();
+    });
+
     return gulp.src(paths.js)
         .pipe(sourcemaps.init())
-        .pipe(babel({
-            presets: ['es2015']  
-        }))
+        .pipe(babelPipe)
         .pipe(concat('app.js'))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(paths.dist));

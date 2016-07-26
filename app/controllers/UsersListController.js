@@ -2,7 +2,7 @@ const app = angular.module('app', ['contextMenu']);
 
 app.controller('UsersListController', function ($scope, users) {
     $scope.userContextMenu = [
-        {text: 'Send private message', enabled: 'user.online'},
+        {text: 'Send private message', enabled: 'user.online', click: 'sendMessage(user)'},
         {text: 'Show full profile'},
         // Условие, определяющее, включена ли кнопка
         {text: 'Ban', enabled: 'user.group != "moderator"'},
@@ -18,6 +18,10 @@ app.controller('UsersListController', function ($scope, users) {
             {text: 'Send admin message'},
             {text: 'Remove admin rights'}
     ];
+
+    $scope.sendMessage = (user) => {
+        console.log('Send message to', user.name);
+    };
 
     $scope.users = [];
     users()
