@@ -9,12 +9,17 @@ app.controller('UsersListController', function ($scope, users) {
         // Подменю
         {text: 'Moar', submenu: [
             {text: 'Action 1'},
-            {text: 'Action 2'},
+            {text: 'Action 2', enabled: 'false'},
             {text: 'Moar moar', submenu: [
                 {text: 'Subsubmenu action 1'},
-                {text: 'Subsubmenu action 2'},
-                {text: 'Subsubmenu action 3'}
+                {text: 'Subsubmenu action 2', enabled: 'false'},
+                {text: 'Subsubmenu action 3', click: 'sendMessage(user)'}
             ]}
+        ]},
+        {text: 'Moar 2', submenu: [
+            {text: 'Moar2 action 1'},
+            {text: 'Moar2 action 2'},
+            {text: 'Moar2 action 3'}
         ]}
     ];
 

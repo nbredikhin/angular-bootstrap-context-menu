@@ -4,7 +4,7 @@ angular.module('contextMenu', [])
     .controller('ContextMenuController', function ($scope, $document, $element) {
         // Элемент меню
         let isVisible = false;
-        let menuElements = [];
+        let activeMenus = [];
 
         let handleItemClick = (item) => {    
             switch (typeof(item.click)) {
@@ -12,25 +12,34 @@ angular.module('contextMenu', [])
                     click();
                     break;
                 case 'string':
-                    console.log($scope.$eval(item.click));
+                    $scope.$eval(item.click);
                     break;
             }
-            
-            this.hideMenu();
+
+            this.hide();
         };
 
         let handleItemMouseOver = (event, menu, button, item) => {
-            if (!item.submenu) {
-                return;
+            // Скрыть все вложенные меню уровнем выше
+            let menusToRemove = [];
+            angular.forEach(activeMenus, (m) => {
+                if (m.depth > menu.depth) {
+                    menusToRemove.push(m);
+                }
+            });
+            angular.forEach(menusToRemove, (m) => this.removeMenu(m));
+
+            // Отобразить вложенное меню
+            if (item.submenu) {
+                let position = angular.element(button).offset();
+                let x = position.left + angular.element(menu.element).width();
+                let y = position.top;
+                this.addMenu(x, y, item.submenu, menu.depth + 1);
             }
-            let position = angular.element(button).offset();
-            let x = position.left + angular.element(menu).width();
-            let y = position.top;
-            this.addMenu(x, y, item.submenu);
         };
 
         // Добавить меню/подменю
-        this.addMenu = (x, y, items) => {
+        this.addMenu = (x, y, items, depth = 0) => {
             let div = angular.element('<div>');
             div.addClass('btn-group-vertical context-menu');
             div.attr({role: 'group'});
@@ -39,6 +48,11 @@ angular.module('contextMenu', [])
                 left: x + 'px',
                 top: y + 'px'
             });
+
+            let menu = {
+                element: div, 
+                depth // Уровень вложенности
+            };
 
             // Добавить кнопки
             angular.forEach(items, (item) => {
@@ -64,31 +78,43 @@ angular.module('contextMenu', [])
                 // Обработка мыши
                 if (isEnabled) {                    
                     button.on('click', (event) => handleItemClick(item));
-                    button.on('mouseover', (event) => handleItemMouseOver(event, div, button, item));
+                    button.on('mouseover', (event) => handleItemMouseOver(event, menu, button, item));
                 }
             });
 
             // Добавить меню
             angular.element($document).find('body').append(div);
-            menuElements.push(div);
+            activeMenus.push(menu);
+        };
+
+        this.removeMenu = (menu) => {
+            if (!isVisible) {
+                return;
+            }
+            let index = activeMenus.indexOf(menu);
+            if (index < 0) {
+                return;
+            }
+            activeMenus.splice(index, 1);
+            menu.element.remove();
         };
 
         // Отобразить контекстное меню
-        this.showMenu = (x, y, items) => {
+        this.show = (x, y, items) => {
             this.addMenu(x, y, items);
             isVisible = true;
         };
         
         // Удалить контекстное меню
-        this.hideMenu = () => {
+        this.hide = () => {
             if (!isVisible) {
                 return;
             }            
             isVisible = false;
-            angular.forEach(menuElements, (element) => {
-                element.remove();
+            angular.forEach(activeMenus, (menu) => {
+                menu.element.remove();
             });
-            menuElements = [];
+            activeMenus = [];
         };
 
         $document.on('mousedown', (event) => {
@@ -100,7 +126,7 @@ angular.module('contextMenu', [])
             {
                 return;
             }
-            this.hideMenu();
+            this.hide();
         });
     })
 
@@ -114,10 +140,10 @@ angular.module('contextMenu', [])
                         event.stopPropagation();
 
                         if ($rootScope.activeContextMenuController) {
-                            $rootScope.activeContextMenuController.hideMenu();
+                            $rootScope.activeContextMenuController.hide();
                         }
                         let items = scope.$eval(attrs.contextMenu);
-                        controller.showMenu(event.pageX, event.pageY, items);
+                        controller.show(event.pageX, event.pageY, items);
                         $rootScope.activeContextMenuController = controller;
                     });
                 });
