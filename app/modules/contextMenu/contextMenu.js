@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('contextMenu', [])
-    .controller('ContextMenuController', function ($scope, $document, $element) {
+    .controller('ContextMenuController', function ($scope, $document, $element, $window) {
         // Отображается ли меню        
         let isVisible = false;
         // Все меню/подменю, принадлежащие этому контекстному меню
@@ -21,10 +21,32 @@ angular.module('contextMenu', [])
                 }
             });
             return result;
-        };        
+        };
+
+        let isButtonItemEnabled = (item) => {
+            if (typeof(item.enabled) === 'boolean') {
+                return item.enabled;
+            } else if (typeof(item.enabled) !== 'string') {
+                return true;
+            }
+            return $scope.$eval(item.enabled);
+        };
+
+        let setMenuPosition = (menuElement, x, y) => {
+            menuElement.css({
+                position: 'absolute',
+                left: x + 'px',
+                top: y + 'px',
+                // Меню должно всегда быть сверху
+                'z-index': 99999
+            });
+        };
 
         // Нажатие на кнопку меню
-        let handleItemClick = (item) => {    
+        let handleItemClick = (item) => {
+            if (!isButtonItemEnabled(item)) {
+                return;
+            }
             switch (typeof(item.click)) {
                 case 'function':
                     click();
@@ -58,9 +80,21 @@ angular.module('contextMenu', [])
             // Отобразить вложенное меню
             if (item.submenu) {
                 let position = angular.element(button).offset();
-                let x = position.left + angular.element(menu.element).width();
+                let menuWidth = angular.element(menu.element).outerWidth();
+                let x = position.left + menuWidth;
                 let y = position.top;
-                this.addMenu(x, y, item.submenu, menu.depth + 1, button);
+                // Добавить меню
+                let nestedMenu = this.addMenu(x, y, item.submenu, menu.depth + 1, button);
+                nestedMenu.element.addClass('hidden');
+                // Проверка выхода за границы экрана
+                setTimeout(() => {
+                    nestedMenu.element.removeClass('hidden');
+                    let nestedMenuWidth = angular.element(nestedMenu.element).outerWidth();
+                    if (x + nestedMenuWidth > angular.element($window).width()) {
+                        x = position.left - nestedMenuWidth;
+                        setMenuPosition(nestedMenu.element, x, y);
+                    }
+                });
             }
         };
 
@@ -77,13 +111,7 @@ angular.module('contextMenu', [])
             let div = angular.element('<div>');
             div.addClass('list-group context-menu');
             div.attr({role: 'group'});
-            div.css({
-                position: 'absolute',
-                left: x + 'px',
-                top: y + 'px',
-                // Меню должно всегда быть сверху
-                'z-index': 99999
-            });
+            setMenuPosition(div, x, y);
 
             let menu = {
                 element: div, 
@@ -107,18 +135,13 @@ angular.module('contextMenu', [])
                 div.append(button);
 
                 // Включена ли кнопка
-                let isEnabled = true;
-                if (typeof(item.enabled) === 'string') {
-                    isEnabled = $scope.$eval(item.enabled);
-                    if (!isEnabled) {
-                        button.addClass('disabled');
-                    }
-                }
+                let isEnabled = isButtonItemEnabled(item);
 
-                // Обработка мыши
                 if (isEnabled) {                    
                     button.on('click', (event) => handleItemClick(item));
                     button.on('mouseover', (event) => handleItemMouseOver(menu, button, item));
+                } else {
+                    button.addClass('disabled');
                 }
 
                 menu.buttons.push({element: button, item});
@@ -127,6 +150,7 @@ angular.module('contextMenu', [])
             // Добавить меню
             angular.element($document).find('body').append(div);
             activeMenus.push(menu);
+            return menu;
         };
 
         this.removeMenu = (menu) => {
@@ -148,7 +172,7 @@ angular.module('contextMenu', [])
          * @param {Array} items - элементы меню
          */
         this.show = (x, y, items) => {
-            this.addMenu(x, y, items);
+            this.addMenu(x, y, items);      
             isVisible = true;
         };
         
@@ -184,6 +208,11 @@ angular.module('contextMenu', [])
                 return;
             }
             let selectedMenu = activeMenus[selectedMenuIndex];
+            if (!selectedMenu) {
+                selectedMenuIndex = 0;
+                selectedButtonIndex = 0;
+                return;
+            }
             let selectedButton = selectedMenu.buttons[selectedButtonIndex];
             let previousSelectedButtonIndex = selectedButtonIndex;
             switch (event.keyCode) {
