@@ -6,6 +6,8 @@ angular.module('contextMenu', [])
         let isVisible = false;
         // Все меню/подменю, принадлежащие этому контекстному меню
         let activeMenus = [];
+        // Создавать вложенные меню слева
+        let nestedAtLeft = false;
 
         // Текущее выделенное меню
         let selectedMenuIndex = 0;        
@@ -59,8 +61,8 @@ angular.module('contextMenu', [])
         };
 
         // Наведение на кнопку меню
-        let handleItemMouseOver = (menu, button, item, fromKeyboard = false) => {
-            // Сброс выделения с клавиатуры
+        let handleItemMouseOver = (menu, button, item, fromKeyboard=false) => {
+            // Сброс выделения, выполненного с клавиатуры
             if (activeMenus[selectedMenuIndex] && !fromKeyboard) {
                 let selectedMenu = activeMenus[selectedMenuIndex];
                 let selectedButton = selectedMenu.buttons[selectedButtonIndex];
@@ -80,25 +82,31 @@ angular.module('contextMenu', [])
             // Отобразить вложенное меню
             if (item.submenu) {
                 let position = angular.element(button).offset();
-                let menuWidth = angular.element(menu.element).outerWidth();
+                let menuWidth = menu.element.width();
                 let x = position.left + menuWidth;
                 let y = position.top;
                 // Добавить меню
                 let nestedMenu = this.addMenu(x, y, item.submenu, menu.depth + 1, button);
-                nestedMenu.element.addClass('hidden');
-                // Проверка выхода за границы экрана
-                setTimeout(() => {
-                    nestedMenu.element.removeClass('hidden');
-                    let nestedMenuWidth = angular.element(nestedMenu.element).outerWidth();
-                    if (x + nestedMenuWidth > angular.element($window).width()) {
-                        x = position.left - nestedMenuWidth;
-                        setMenuPosition(nestedMenu.element, x, y);
-                    }
-                });
+
+                // Проверка выхода за границы экрана по горизонтали
+                // Перемещаем меню в (0,0), чтобы его размер стал максимальным, 
+                // иначе у края экрана меню может сжиматься и вызов
+                // nestedMenu.element.width() возвращает меньший размер.
+                setMenuPosition(nestedMenu.element, 0, 0);                
+                let nestedMenuWidth = nestedMenu.element.width();
+                setMenuPosition(nestedMenu.element, x, y);
+
+                if (nestedAtLeft || x + nestedMenuWidth > angular.element($window).width()) {
+                    x = position.left - nestedMenuWidth;
+                    setMenuPosition(nestedMenu.element, x, y);
+                    // Если хотя бы одно вложенное меню не поместилось справа, 
+                    // создаем все остальные вложенные меню слева
+                    nestedAtLeft = true;
+                }
             }
         };
 
-        // Добавить меню/подменю
+        // Добавить меню/подменю в контекстное меню
         /**
          * Добаить меню/подменю 
          * @param {Number} x - Позиция меню по горизонтали
@@ -107,7 +115,7 @@ angular.module('contextMenu', [])
          * @param {Number} [0] depth - Уровень вложенности меню
          * @param {Element} [null] parentButtonElement - Кнопка родительского меню, открывающая это вложенное меню
          */
-        this.addMenu = (x, y, items, depth = 0, parentButtonElement = null) => {
+        this.addMenu = (x, y, items, depth=0, parentButtonElement=null) => {
             let div = angular.element('<div>');
             div.addClass('list-group context-menu');
             div.attr({role: 'group'});
@@ -166,21 +174,34 @@ angular.module('contextMenu', [])
         };
 
         /**
-         * Отобразить это контекстное меню
+         * Отобразить контекстное меню
          * @param {Number} x - позиция меню по горизонтали
          * @param {Number} y - позиция меню по вертикали
          * @param {Array} items - элементы меню
          */
         this.show = (x, y, items) => {
-            this.addMenu(x, y, items);      
             isVisible = true;
+            nestedAtLeft = false;
+
+            let menu = this.addMenu(x, y, items);
+
+            // Проверка выхода за границы экрана по горизонтали
+            setMenuPosition(menu.element, 0, 0);                
+            let menuWidth = menu.element.width();
+            setMenuPosition(menu.element, x, y);
+
+            if (x + menuWidth > angular.element($window).width()) {
+                x -= menuWidth;
+                setMenuPosition(menu.element, x, y);
+                nestedAtLeft = true;
+            }
         };
         
         // Скрыть контекстное меню
         this.hide = () => {
             if (!isVisible) {
                 return;
-            }            
+            }
             isVisible = false;
             angular.forEach(activeMenus, (menu) => {
                 menu.element.remove();
@@ -201,8 +222,7 @@ angular.module('contextMenu', [])
             this.hide();
         });
 
-        // Управление с клавиатуры
-        
+        // Перемещение по контекстному меню при помощи клавиатуры        
         $document.on('keydown', (event) => {
             if (!isVisible) {
                 return;
@@ -285,6 +305,7 @@ angular.module('contextMenu', [])
         });
     })
 
+    // Директива context-menu, в которую передается массив item'ов
     .directive('contextMenu', function($rootScope) {
         return {
             controller: 'ContextMenuController',
