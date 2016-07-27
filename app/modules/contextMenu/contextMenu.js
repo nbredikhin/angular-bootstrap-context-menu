@@ -34,6 +34,7 @@ angular.module('contextMenu', [])
             return $scope.$eval(item.enabled);
         };
 
+        // Перемещает меню в указанную позицию на экране
         let setMenuPosition = (menuElement, x, y) => {
             menuElement.css({
                 position: 'absolute',
@@ -87,6 +88,7 @@ angular.module('contextMenu', [])
                 let y = position.top;
                 // Добавить меню
                 let nestedMenu = this.addMenu(x, y, item.submenu, menu.depth + 1, button);
+                y = nestedMenu.element.offset().top;
 
                 // Проверка выхода за границы экрана по горизонтали
                 // Перемещаем меню в (0,0), чтобы его размер стал максимальным, 
@@ -119,7 +121,6 @@ angular.module('contextMenu', [])
             let div = angular.element('<div>');
             div.addClass('list-group context-menu');
             div.attr({role: 'group'});
-            setMenuPosition(div, x, y);
 
             let menu = {
                 element: div, 
@@ -158,6 +159,13 @@ angular.module('contextMenu', [])
             // Добавить меню
             angular.element($document).find('body').append(div);
             activeMenus.push(menu);
+
+            // Проверка выхода за границы экрана по вертикали
+            setMenuPosition(div, 0, 0);
+            let menuHeight = div.height();            
+            y = Math.min(y, angular.element($window).height() - menuHeight + $window.pageYOffset);
+            setMenuPosition(div, x, y);
+            console.log(menuHeight, y, angular.element($window).height());
             return menu;
         };
 
@@ -184,6 +192,7 @@ angular.module('contextMenu', [])
             nestedAtLeft = false;
 
             let menu = this.addMenu(x, y, items);
+            y = menu.element.offset().top;
 
             // Проверка выхода за границы экрана по горизонтали
             setMenuPosition(menu.element, 0, 0);                
