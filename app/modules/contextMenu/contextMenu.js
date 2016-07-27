@@ -52,11 +52,13 @@ angular.module('contextMenu', [])
             }
             switch (typeof(item.click)) {
                 case 'function':
-                    click();
+                    item.click();
                     break;
                 case 'string':
                     $scope.$eval(item.click);
                     break;
+                default:
+                    return;
             }
             this.hide();
         };
@@ -165,7 +167,6 @@ angular.module('contextMenu', [])
             let menuHeight = div.height();            
             y = Math.min(y, angular.element($window).height() - menuHeight + $window.pageYOffset);
             setMenuPosition(div, x, y);
-            console.log(menuHeight, y, angular.element($window).height());
             return menu;
         };
 
