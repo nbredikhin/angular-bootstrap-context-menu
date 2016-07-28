@@ -31,7 +31,7 @@ $scope.exampleContextMenu = [
         { text: 'Another nested menu button' },
 
         // You can even create nested menus inside of other nested menus
-        { text: 'Actions', sumbenu: [
+        { text: 'Actions', submenu: [
             { text: 'Action 1' },
             { text: 'Action 2' },
         ]}
@@ -40,7 +40,12 @@ $scope.exampleContextMenu = [
 ```
 
 ```html
-<div class="user-profile-body" context-menu="exampleContextMenu">
+<div context-menu="exampleContextMenu">
+    <!-- ... -->
+</div>
+
+<!-- In the directive you can also use expressions: -->
+<div context-menu="user.group == 'admin' ? adminContextMenu : userContextMenu">
     <!-- ... -->
 </div>
 ```
@@ -58,7 +63,7 @@ To start test aplication you can simply run
 ```bash
 gulp watch
 ```
-Then in another terminal run
+Then in another terminal window/tab run
 ```bash
 npm start
 ```
