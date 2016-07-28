@@ -9,6 +9,12 @@ angular.module('contextMenu', [])
         // Создавать вложенные меню слева
         let nestedAtLeft = false;
 
+        // Коды клавиш для управления с клавиатуры
+        const KEYCODE_LEFT = 37;
+        const KEYCODE_RIGHT = 39;
+        const KEYCODE_UP = 38;
+        const KEYCODE_DOWN = 40;
+        const KEYCODE_CONFIRM = 13;
         // Текущее выделенное меню
         let selectedMenuIndex = 0;        
         // Выделенная кнопка в текущем меню
@@ -120,6 +126,10 @@ angular.module('contextMenu', [])
          * @param {Element} [null] parentButtonElement - Кнопка родительского меню, открывающая это вложенное меню
          */
         this.addMenu = (x, y, items, depth=0, parentButtonElement=null) => {
+            if (typeof(items) !== 'object') {
+                return null;
+            }
+
             let div = angular.element('<div>');
             div.addClass('list-group context-menu');
             div.attr({role: 'group'});
@@ -133,8 +143,11 @@ angular.module('contextMenu', [])
 
             // Добавить кнопки
             angular.forEach(items, (item) => {
+                if (typeof(item) !== 'object') {
+                    return;
+                }
                 let button = angular.element('<a>');
-                button.addClass('list-group-item context-menu-item');  
+                button.addClass('list-group-item context-menu-item'); 
                 button.append(item.text + '&nbsp;');
                 button.attr({href: '#'});
 
@@ -245,9 +258,10 @@ angular.module('contextMenu', [])
             }
             let selectedButton = selectedMenu.buttons[selectedButtonIndex];
             let previousSelectedButtonIndex = selectedButtonIndex;
+            
             switch (event.keyCode) {
-                // Left
-                case 37:
+                // Влево или в право в зависимости от направления появления вложенных меню
+                case nestedAtLeft ? KEYCODE_RIGHT : KEYCODE_LEFT:
                     // Получение родительского меню
                     let parentMenu = getMenuAtDepth(selectedMenu.depth - 1);
                     if (parentMenu) {
@@ -266,8 +280,8 @@ angular.module('contextMenu', [])
                         selectedButtonIndex = buttonIndex;
                     } 
                     break;
-                // Right
-                case 39:
+                // Влево или в право в зависимости от направления появления вложенных меню
+                case nestedAtLeft ? KEYCODE_LEFT : KEYCODE_RIGHT:
                     if (selectedButton.item.submenu) {
                         // Получение вложенного меню
                         let nestedMenu = getMenuAtDepth(selectedMenu.depth + 1);
@@ -280,24 +294,21 @@ angular.module('contextMenu', [])
                         } 
                     }
                     break;
-                // Up
-                case 38:
+                case KEYCODE_UP:
                     // Перемещение вверх по текущему меню
                     selectedButtonIndex--;
                     if (selectedButtonIndex < 0) {
                         selectedButtonIndex = selectedMenu.buttons.length - 1;
                     }                    
                     break;
-                // Down
-                case 40:
+                case KEYCODE_DOWN:
                     // Перемещение вниз по текущему меню
                     selectedButtonIndex++;
                     if (selectedButtonIndex >= selectedMenu.buttons.length) {
                         selectedButtonIndex = 0;
                     }               
                     break;
-                // Enter
-                case 13:
+                case KEYCODE_CONFIRM:
                     // Выбор элемента меню
                     handleItemClick(selectedButton.item);
                     break;
