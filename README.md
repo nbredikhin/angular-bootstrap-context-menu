@@ -2,7 +2,7 @@
 
 __angular-bootstrap-context-menu__ is an [AngularJS](https://angularjs.org/) module for creating simple context menus.
 
-[Check out the demo](https://codepen.io/dcr30/pen/VjdxPW).
+[Check out the demo](https://codepen.io/dcr30/full/VjdxPW/).
 
 ## Usage
 __1.__ Install:
@@ -60,7 +60,6 @@ $scope.exampleContextMenu = [
 </div>
 ```
 
-[Check out the demo at codepen](https://codepen.io/dcr30/pen/VjdxPW)
 ## Building
 In order to build the project you need [Node.js](https://nodejs.org/), [Gulp](http://gulpjs.com/) and [Bower](https://bower.io/) installed on your system.
 Clone this repository and run the following commands:
