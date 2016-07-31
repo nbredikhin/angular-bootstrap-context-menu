@@ -1,4 +1,4 @@
-const app = angular.module('app', ['contextMenu']);
+const app = angular.module('app');
 
 app.controller('UsersListController', function ($scope, users) {
     $scope.userContextMenu = [

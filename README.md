@@ -1,8 +1,12 @@
-# angular-context-menu
+# angular-bootstrap-context-menu
 
-__angular-conext-menu__ is an [AngularJS](https://angularjs.org/) module for creating simple context menus.
+__angular-bootstrap-context-menu__ is an [AngularJS](https://angularjs.org/) module for creating simple context menus.
 
 ## Usage
+Include this module module in your application: `['bootstrapContextMenu']`
+
+Write some JavaScript:
+
 ```javascript
 /* ... controller code ... */
 

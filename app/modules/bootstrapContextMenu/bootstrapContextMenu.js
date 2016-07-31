@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('contextMenu', [])
-    .controller('ContextMenuController', function ($scope, $document, $element, $window) {
+angular.module('bootstrapContextMenu', [])
+    .controller('ContextMenuController', ['$scope', '$document', '$element', '$window', function ($scope, $document, $element, $window) {
         let isVisible = false;
         // Contains menus and submenus created by this context menu
         let activeMenus = [];
@@ -311,9 +311,9 @@ angular.module('contextMenu', [])
                 handleItemMouseOver(selectedMenu, selectedButton.element, selectedButton.item, true);
             }
         });
-    })
+    }])
 
-    .directive('contextMenu', function($rootScope) {
+    .directive('contextMenu', ['$rootScope', function($rootScope) {
         return {
             controller: 'ContextMenuController',
             link: (scope, element, attrs, controller) => {
@@ -333,4 +333,4 @@ angular.module('contextMenu', [])
                 });
             }
         };
-    });
+    }]);
