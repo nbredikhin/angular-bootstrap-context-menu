@@ -5,9 +5,7 @@ app.controller('UsersListController', function ($scope, users) {
         {text: 'Send private message', enabled: 'user.online', click: 'sendMessage(user)'},
         {text: 'Show full profile'},
         1,
-        // Условие, определяющее, включена ли кнопка
         {text: 'Ban', enabled: 'user.group != "moderator"'},
-        // Подменю
         {text: 'Moar', submenu: [
             {text: 'Action 1'},
             {text: 'Action 2', enabled: 'false'},
