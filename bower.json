@@ -1,19 +1,22 @@
 {
-  "name": "angular-context-menu",
+  "name": "BootstrapContextMenu",
+  "version": "0.0.1",
   "description": "A simple context menu module for AngularJS",
-  "main": "app/app.js",
+  "main": "dist/bootstrapContextMenu.js",
+  "keywords": [
+    "context",
+    "menu"
+  ],    
   "authors": [
-    "dcr30"
+    "Nikita Bredikhin <bredikhin.nikita@gmail.com>"
   ],
   "license": "ISC",
-  "homepage": "https://github.com/dcr30/angular-context-menu",
-  "private": true,
+  "homepage": "https://github.com/dcr30/angular-bootstrap-context-menu",
+  "private": false,
   "ignore": [
     "**/.*",
     "node_modules",
-    "bower_components",
-    "test",
-    "tests"
+    "bower_components"
   ],
   "dependencies": {
     "angular": "^1.5.7",

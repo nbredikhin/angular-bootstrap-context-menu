@@ -2,10 +2,16 @@
 
 __angular-bootstrap-context-menu__ is an [AngularJS](https://angularjs.org/) module for creating simple context menus.
 
-## Usage
-Include this module module in your application: `['bootstrapContextMenu']`
+[Check out the demo](https://codepen.io/dcr30/pen/VjdxPW).
 
-Write some JavaScript:
+## Usage
+__1.__ Install:
+```bash
+bower install angular-boostrap-context-menu
+```
+__2.__ Include `'bootstrapContextMenu'` module module in your application.
+
+__3.__ Write some JavaScript:
 
 ```javascript
 /* ... controller code ... */
@@ -42,7 +48,7 @@ $scope.exampleContextMenu = [
     ]}
 ];
 ```
-
+...and HTML:
 ```html
 <div context-menu="exampleContextMenu">
     <!-- ... -->
@@ -54,23 +60,20 @@ $scope.exampleContextMenu = [
 </div>
 ```
 
-## Installation
-In order to install and build the project you need [Node.js](https://nodejs.org/), [Gulp](http://gulpjs.com/) and [Bower](https://bower.io/) installed on your system.
+[Check out the demo at codepen](https://codepen.io/dcr30/pen/VjdxPW)
+## Building
+In order to build the project you need [Node.js](https://nodejs.org/), [Gulp](http://gulpjs.com/) and [Bower](https://bower.io/) installed on your system.
 Clone this repository and run the following commands:
 ```bash
-cd angular-context-menu
+cd angular-bootstrap-context-menu
 npm install
 ```
 Bower components will be automatically installed too.
 
-To start test aplication you can simply run
+To build scripts run:
 ```bash
-gulp watch
+gulp
 ```
-Then in another terminal window/tab run
-```bash
-npm start
-```
-It will build the project and start the development server. To specify another port, you can use `gulp watch --port 7777`
+It will process the output to the `./dist` folder.
 
 __Enjoy!__

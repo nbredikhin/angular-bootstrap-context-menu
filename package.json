@@ -1,5 +1,5 @@
 {
-  "name": "angular-context-menu",
+  "name": "angular-bootstrap-context-menu",
   "version": "0.0.2",
   "description": "A simple context menu module for AngularJS",
   "main": "app/app.js",
@@ -9,27 +9,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dcr30/angular-context-menu.git"
+    "url": "git+https://github.com/dcr30/angular-bootstrap-context-menu.git"
   },
   "author": "dcr30",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/dcr30/angular-context-menu/issues"
+    "url": "https://github.com/dcr30/angular-bootstrap-context-menu/issues"
   },
-  "homepage": "https://github.com/dcr30/angular-context-menu#readme",
+  "homepage": "https://github.com/dcr30/angular-bootstrap-context-menu#readme",
   "devDependencies": {
     "babel-preset-es2015": "^6.9.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-concat": "^2.6.0",
-    "gulp-connect": "^4.2.0",
-    "gulp-less": "^3.1.0",
+    "gulp-minify": "0.0.13",
     "gulp-sourcemaps": "^1.6.0",
-    "gulp-util": "^3.0.7",
-    "main-bower-files": "^2.13.1"
-  },
-  "dependencies": {
-    "body-parser": "^1.15.2",
-    "express": "^4.14.0"
+    "gulp-util": "^3.0.7"
   }
 }
