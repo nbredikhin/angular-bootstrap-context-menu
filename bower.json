@@ -1,5 +1,5 @@
 {
-  "name": "BootstrapContextMenu",
+  "name": "angular-bootstrap-context-menu",
   "version": "0.0.1",
   "description": "A simple context menu module for AngularJS",
   "main": "dist/bootstrapContextMenu.js",
